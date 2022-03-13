@@ -79,7 +79,7 @@ void loop()
         tiltMotorCtrl.Disable();
         break;
       }
-      delay(10);
+      delay(100);
     }
   }
   else if (digitalRead(downBtn) == 0 && dir != 4)
@@ -96,7 +96,7 @@ void loop()
         tiltMotorCtrl.Disable();
         break;
       }
-      delay(10);
+      delay(100);
     }
   }
   else if (dir != 0 && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
@@ -108,5 +108,6 @@ void loop()
     panMotorCtrl.Disable();
     tiltMotorCtrl.Stop();
     tiltMotorCtrl.Disable();
+    delay(100);
   }
 }
