@@ -7,7 +7,7 @@ const uint8_t pR_PWM = 6;
 
 BTS7960 panMotorCtrl(pEN, pL_PWM, pR_PWM);
 
-const uint8_t tEN = 11;
+const uint8_t tEN = 16;
 const uint8_t tL_PWM = 9;
 const uint8_t tR_PWM = 10;
 
@@ -26,7 +26,7 @@ void setup()
   pinMode(leftBtn, INPUT_PULLUP);
   pinMode(upBtn, INPUT_PULLUP);
   pinMode(downBtn, INPUT_PULLUP);
-  // Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop()
@@ -34,7 +34,7 @@ void loop()
   if (digitalRead(rightBtn) == 0 && dir != 1)
   {
     panMotorCtrl.Enable();
-    // Serial.println("right");
+    Serial.println("right");
     dir = 1;
     for (int speed = 0; speed < 255; speed += 30)
     {
@@ -51,7 +51,7 @@ void loop()
   else if (digitalRead(leftBtn) == 0 && dir != 2)
   {
     panMotorCtrl.Enable();
-    // Serial.println("left");
+    Serial.println("left");
     dir = 2;
     for (int speed = 0; speed < 255; speed += 30)
     {
@@ -68,7 +68,7 @@ void loop()
   else if (digitalRead(upBtn) == 0 && dir != 3)
   {
     tiltMotorCtrl.Enable();
-    // Serial.println("up");
+    Serial.println("up");
     dir = 3;
     for (int speed = 0; speed < 255; speed += 30)
     {
@@ -85,7 +85,7 @@ void loop()
   else if (digitalRead(downBtn) == 0 && dir != 4)
   {
     tiltMotorCtrl.Enable();
-    // Serial.println("down");
+    Serial.println("down");
     dir = 4;
     for (int speed = 0; speed < 255; speed += 30)
     {
@@ -102,9 +102,11 @@ void loop()
   else if (dir != 0 && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
            digitalRead(upBtn) == 1 && digitalRead(downBtn) == 1)
   {
-    // Serial.println("stop");
+    Serial.println("stop");
     dir = 0;
     panMotorCtrl.Stop();
     panMotorCtrl.Disable();
+    tiltMotorCtrl.Stop();
+    tiltMotorCtrl.Disable();
   }
 }
