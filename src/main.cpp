@@ -45,7 +45,7 @@ void loop()
         panMotorCtrl.Disable();
         break;
       }
-      delay(10);
+      delay(100);
     }
   }
   else if (digitalRead(leftBtn) == 0 && dir != 2)
@@ -62,7 +62,7 @@ void loop()
         panMotorCtrl.Disable();
         break;
       }
-      delay(10);
+      delay(100);
     }
   }
   else if (digitalRead(upBtn) == 0 && dir != 3)
