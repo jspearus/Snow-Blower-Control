@@ -17,8 +17,8 @@ BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 #define leftBtn 3
 #define upBtn 7
 #define downBtn 8
-// ######## CONFIGURATION ###################
 
+// ######## CONFIGURATION ###################
 #define RAMP_UP_SPEED_PAN 10
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
