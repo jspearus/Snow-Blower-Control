@@ -30,7 +30,7 @@ BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 #define MAX_SPEED_TILT 255
 //######################################################33
 
-int dir = 0;
+String dir = "stop";
 
 void setup()
 {
@@ -43,11 +43,11 @@ void setup()
 
 void loop()
 {
-  if (digitalRead(rightBtn) == 0 && dir != 1)
+  if (digitalRead(rightBtn) == 0 && dir != "right")
   {
     panMotorCtrl.Enable();
-    Serial.println("right");
-    dir = 1;
+    dir = "right";
+    Serial.println(dir);
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += 3)
     {
       panMotorCtrl.TurnRight(speed);
@@ -60,11 +60,11 @@ void loop()
       delay(RAMP_UP_SPEED_PAN);
     }
   }
-  else if (digitalRead(leftBtn) == 0 && dir != 2)
+  else if (digitalRead(leftBtn) == 0 && dir != "left")
   {
     panMotorCtrl.Enable();
-    Serial.println("left");
-    dir = 2;
+    dir = "left";
+    Serial.println(dir);
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += 3)
     {
       panMotorCtrl.TurnLeft(speed);
@@ -77,11 +77,11 @@ void loop()
       delay(RAMP_UP_SPEED_PAN);
     }
   }
-  else if (digitalRead(upBtn) == 0 && dir != 3)
+  else if (digitalRead(upBtn) == 0 && dir != "up")
   {
     tiltMotorCtrl.Enable();
-    Serial.println("up");
-    dir = 3;
+    dir = "up";
+    Serial.println(dir);
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += 3)
     {
       tiltMotorCtrl.TurnLeft(speed);
@@ -94,11 +94,11 @@ void loop()
       delay(RAMP_UP_SPEED_TILT);
     }
   }
-  else if (digitalRead(downBtn) == 0 && dir != 4)
+  else if (digitalRead(downBtn) == 0 && dir != "down")
   {
     tiltMotorCtrl.Enable();
-    Serial.println("down");
-    dir = 4;
+    dir = "down";
+    Serial.println(dir);
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += 3)
     {
       tiltMotorCtrl.TurnRight(speed);
@@ -111,11 +111,11 @@ void loop()
       delay(RAMP_UP_SPEED_TILT);
     }
   }
-  else if (dir != 0 && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
+  else if (dir != "stop" && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
            digitalRead(upBtn) == 1 && digitalRead(downBtn) == 1)
   {
-    Serial.println("stop");
-    dir = 0;
+    dir = "stop";
+    Serial.println(dir);
     panMotorCtrl.Stop();
     panMotorCtrl.Disable();
     tiltMotorCtrl.Stop();
