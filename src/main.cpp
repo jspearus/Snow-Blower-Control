@@ -19,14 +19,14 @@ BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 #define downBtn 8
 // ######## CONFIGURATION ###################
 
-#define RAMP_UP_SPEED_PAN 2
-#define RAMP_DOWN_SPEED_PAN 2
-#define MIN_SPEED_PAN -255
+#define RAMP_UP_SPEED_PAN 10
+// #define RAMP_DOWN_SPEED_PAN 30
+#define MIN_SPEED_PAN 0
 #define MAX_SPEED_PAN 255
 
-#define RAMP_UP_SPEED_TILT 2
-#define RAMP_DOWN_SPEED_TILT 2
-#define MIN_SPEED_TILT -255
+#define RAMP_UP_SPEED_TILT 10
+// #define RAMP_DOWN_SPEED_TILT 2
+#define MIN_SPEED_TILT 0
 #define MAX_SPEED_TILT 255
 //######################################################33
 
@@ -48,7 +48,7 @@ void loop()
     panMotorCtrl.Enable();
     Serial.println("right");
     dir = 1;
-    for (int speed = 0; speed < 255; speed += 30)
+    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += 3)
     {
       panMotorCtrl.TurnRight(speed);
       if (digitalRead(rightBtn) == 1)
@@ -57,7 +57,7 @@ void loop()
         panMotorCtrl.Disable();
         break;
       }
-      delay(100);
+      delay(RAMP_UP_SPEED_PAN);
     }
   }
   else if (digitalRead(leftBtn) == 0 && dir != 2)
@@ -65,7 +65,7 @@ void loop()
     panMotorCtrl.Enable();
     Serial.println("left");
     dir = 2;
-    for (int speed = 0; speed < 255; speed += 30)
+    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += 3)
     {
       panMotorCtrl.TurnLeft(speed);
       if (digitalRead(leftBtn) == 1)
@@ -74,7 +74,7 @@ void loop()
         panMotorCtrl.Disable();
         break;
       }
-      delay(100);
+      delay(RAMP_UP_SPEED_PAN);
     }
   }
   else if (digitalRead(upBtn) == 0 && dir != 3)
@@ -82,7 +82,7 @@ void loop()
     tiltMotorCtrl.Enable();
     Serial.println("up");
     dir = 3;
-    for (int speed = 0; speed < 255; speed += 30)
+    for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += 3)
     {
       tiltMotorCtrl.TurnLeft(speed);
       if (digitalRead(upBtn) == 1)
@@ -91,7 +91,7 @@ void loop()
         tiltMotorCtrl.Disable();
         break;
       }
-      delay(100);
+      delay(RAMP_UP_SPEED_TILT);
     }
   }
   else if (digitalRead(downBtn) == 0 && dir != 4)
@@ -99,7 +99,7 @@ void loop()
     tiltMotorCtrl.Enable();
     Serial.println("down");
     dir = 4;
-    for (int speed = 0; speed < 255; speed += 30)
+    for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += 3)
     {
       tiltMotorCtrl.TurnRight(speed);
       if (digitalRead(downBtn) == 1)
@@ -108,7 +108,7 @@ void loop()
         tiltMotorCtrl.Disable();
         break;
       }
-      delay(100);
+      delay(RAMP_UP_SPEED_TILT);
     }
   }
   else if (dir != 0 && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
