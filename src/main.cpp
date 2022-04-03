@@ -13,12 +13,23 @@ const uint8_t tR_PWM = 10;
 
 BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 
-#define rightBtn 2
-#define leftBtn 3
-#define upBtn 7
-#define downBtn 8
+#define rightBtn 7
+#define leftBtn 8
+#define upBtn 14
+#define downBtn 15
 
-// ######## CONFIGURATION ###################
+#define intPanRight 1
+#define intPanLeft 0
+#define intTiltUp 3
+#define intTiltDown 2
+
+bool panRightStop = false;
+bool panLeftStop = false;
+bool tiltUpStop = false;
+bool tiltDownStop = false;
+
+
+// ######## CONFIGURATION ############################
 #define RAMP_UP_SPEED_PAN 10
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
@@ -28,12 +39,28 @@ BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MIN_SPEED_TILT 0
 #define MAX_SPEED_TILT 255
-//######################################################33
+//####################################################
+
+//############# FUNCTION DEFINITIONS ##############################
+
+void panRightInt();
+void panLeftInt();
+void tiltUpInt();
+void tiltDownInt();
 
 String dir = "stop";
 
 void setup()
 {
+  pinMode(intPanRight, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(intPanRight), panRightInt, RISING);
+  pinMode(intPanLeft, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(intPanLeft), panLeftInt, RISING);
+  // pinMode(intTiltUp, INPUT_PULLUP);
+  // attachInterrupt(digitalPinToInterrupt(intTiltUp), tiltUpInt, FALLING);
+  // pinMode(intTiltDown, INPUT_PULLUP);
+  // attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, FALLING);
+
   pinMode(rightBtn, INPUT_PULLUP);
   pinMode(leftBtn, INPUT_PULLUP);
   pinMode(upBtn, INPUT_PULLUP);
@@ -43,8 +70,9 @@ void setup()
 
 void loop()
 {
-  if (digitalRead(rightBtn) == 0 && dir != "right")
+  if (digitalRead(rightBtn) == 0 && dir != "right" && panRightStop == false)
   {
+    panLeftStop = false;
     panMotorCtrl.Enable();
     dir = "right";
     Serial.println(dir);
@@ -60,8 +88,9 @@ void loop()
       delay(RAMP_UP_SPEED_PAN);
     }
   }
-  else if (digitalRead(leftBtn) == 0 && dir != "left")
+  else if (digitalRead(leftBtn) == 0 && dir != "left" && panLeftStop == false)
   {
+    panRightStop = false;
     panMotorCtrl.Enable();
     dir = "left";
     Serial.println(dir);
@@ -122,4 +151,25 @@ void loop()
     tiltMotorCtrl.Disable();
     delay(100);
   }
+}
+
+void panRightInt(){
+  if (panRightStop == false){
+    Serial.println("pan Right Stop");
+    panRightStop = true;
+  }
+}
+void panLeftInt(){
+  if (panLeftStop == false){
+    Serial.println("pan Left Stop");
+    panLeftStop = true;
+  }
+}
+void tiltUpInt(){
+  Serial.println("tilt Up Stop");
+  tiltUpStop = true;
+}
+void tiltDownInt(){
+  Serial.println("tilt Down Stop");
+  tiltDownStop = true;
 }
