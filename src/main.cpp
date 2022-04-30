@@ -13,8 +13,8 @@ const uint8_t tR_PWM = 10;
 
 BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 
-#define rightBtn 7
-#define leftBtn 8
+#define rightBtn 8
+#define leftBtn 7
 #define upBtn 14
 #define downBtn 15
 
@@ -27,7 +27,6 @@ bool panRightStop = false;
 bool panLeftStop = false;
 bool tiltUpStop = false;
 bool tiltDownStop = false;
-
 
 // ######## CONFIGURATION ############################
 #define RAMP_UP_SPEED_PAN 10
@@ -52,6 +51,7 @@ String dir = "stop";
 
 void setup()
 {
+  // init interupt pins and atach the Interupt function
   pinMode(intPanRight, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(intPanRight), panRightInt, RISING);
   pinMode(intPanLeft, INPUT_PULLUP);
@@ -61,11 +61,12 @@ void setup()
   // pinMode(intTiltDown, INPUT_PULLUP);
   // attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, FALLING);
 
+  // set pinmodes for joystick input
   pinMode(rightBtn, INPUT_PULLUP);
   pinMode(leftBtn, INPUT_PULLUP);
   pinMode(upBtn, INPUT_PULLUP);
   pinMode(downBtn, INPUT_PULLUP);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop()
@@ -79,7 +80,7 @@ void loop()
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += 3)
     {
       panMotorCtrl.TurnRight(speed);
-      if (digitalRead(rightBtn) == 1)
+      if (digitalRead(rightBtn) == 1 || panRightStop == true)
       {
         panMotorCtrl.Stop();
         panMotorCtrl.Disable();
@@ -97,7 +98,7 @@ void loop()
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += 3)
     {
       panMotorCtrl.TurnLeft(speed);
-      if (digitalRead(leftBtn) == 1)
+      if (digitalRead(leftBtn) == 1 || panLeftStop == true)
       {
         panMotorCtrl.Stop();
         panMotorCtrl.Disable();
@@ -153,23 +154,29 @@ void loop()
   }
 }
 
-void panRightInt(){
-  if (panRightStop == false){
+void panRightInt()
+{
+  if (panRightStop == false)
+  {
     Serial.println("pan Right Stop");
     panRightStop = true;
   }
 }
-void panLeftInt(){
-  if (panLeftStop == false){
+void panLeftInt()
+{
+  if (panLeftStop == false)
+  {
     Serial.println("pan Left Stop");
     panLeftStop = true;
   }
 }
-void tiltUpInt(){
+void tiltUpInt()
+{
   Serial.println("tilt Up Stop");
   tiltUpStop = true;
 }
-void tiltDownInt(){
+void tiltDownInt()
+{
   Serial.println("tilt Down Stop");
   tiltDownStop = true;
 }
