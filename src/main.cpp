@@ -59,7 +59,7 @@ void setup()
   // attachInterrupt(digitalPinToInterrupt(intPanLeft), panLeftInt, FALLING);
 
   pinMode(intTiltUp, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(intTiltUp), tiltUpInt, FALLING);
+  attachInterrupt(digitalPinToInterrupt(intTiltUp), tiltUpInt, RISING);
   pinMode(intTiltDown, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, FALLING);
 
@@ -156,31 +156,56 @@ void loop()
     tiltMotorCtrl.Disable();
     delay(100);
   }
+  if (tiltDownStop == true || tiltUpStop == true ||
+      panLeftStop == true || panRightStop == true)
+  {
+    if (dir != "stop")
+    {
+      dir = "stop";
+      Serial.println(dir);
+    }
+    panMotorCtrl.Stop();
+    panMotorCtrl.Disable();
+    tiltMotorCtrl.Stop();
+    tiltMotorCtrl.Disable();
+    delay(100);
+  }
 }
 
 void panRightInt()
 {
-  if (panRightStop == false)
+  if (panRightStop == false && dir == "right")
   {
     Serial.println("pan Right Stop");
     panRightStop = true;
+    dir = "stop";
   }
 }
 void panLeftInt()
 {
-  if (panLeftStop == false)
+  if (panLeftStop == false && dir == "left")
   {
     Serial.println("pan Left Stop");
     panLeftStop = true;
+    dir = "stop";
   }
 }
 void tiltUpInt()
 {
-  Serial.println("tilt Up Stop");
-  tiltUpStop = true;
+  if (tiltUpStop == false && dir == "up")
+  {
+    Serial.println("tilt Up Stop");
+    tiltUpStop = true;
+    dir = "stop";
+  }
 }
 void tiltDownInt()
 {
-  Serial.println("tilt Down Stop");
-  tiltDownStop = true;
+  if (tiltDownStop == false && dir == "down")
+  {
+
+    Serial.println("tilt Down Stop");
+    tiltDownStop = true;
+    dir = "stop";
+  }
 }
