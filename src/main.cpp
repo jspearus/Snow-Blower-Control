@@ -83,6 +83,42 @@ void loop()
     {
       Serial.println("SnowBlower-#");
     }
+    else if (Data_In == "up")
+    {
+      dir = "up";
+      moveTiltMotor(dir);
+      delay(200);
+      dir = "stop";
+      movePanMotor(dir);
+      moveTiltMotor(dir);
+    }
+    else if (Data_In == "down")
+    {
+      dir = "down";
+      moveTiltMotor(dir);
+      delay(200);
+      dir = "stop";
+      movePanMotor(dir);
+      moveTiltMotor(dir);
+    }
+    else if (Data_In == "left")
+    {
+      dir = "left";
+      movePanMotor(dir);
+      delay(200);
+      dir = "stop";
+      movePanMotor(dir);
+      moveTiltMotor(dir);
+    }
+    else if (Data_In == "right")
+    {
+      dir = "right";
+      movePanMotor(dir);
+      delay(200);
+      dir = "stop";
+      movePanMotor(dir);
+      moveTiltMotor(dir);
+    }
   }
   if (digitalRead(rightBtn) == 0 && dir != "right" && panRightStop == false)
   {
