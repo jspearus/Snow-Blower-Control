@@ -108,11 +108,8 @@ void loop()
            digitalRead(upBtn) == 1 && digitalRead(downBtn) == 1)
   {
     dir = "stop";
-    Serial.println(dir);
-    panMotorCtrl.Stop();
-    panMotorCtrl.Disable();
-    tiltMotorCtrl.Stop();
-    tiltMotorCtrl.Disable();
+    movePanMotor(dir);
+    moveTiltMotor(dir);
     delay(100);
   }
   if (tiltDownStop == true || tiltUpStop == true ||
@@ -121,12 +118,9 @@ void loop()
     if (dir != "stop")
     {
       dir = "stop";
-      Serial.println(dir);
+      movePanMotor(dir);
+      moveTiltMotor(dir);
     }
-    panMotorCtrl.Stop();
-    panMotorCtrl.Disable();
-    tiltMotorCtrl.Stop();
-    tiltMotorCtrl.Disable();
     delay(100);
   }
 } // END MAIN LOOP
@@ -165,6 +159,11 @@ void movePanMotor(String dir)
       delay(10);
     }
   }
+  else if (dir == "stop")
+  {
+    panMotorCtrl.Stop();
+    panMotorCtrl.Disable();
+  }
 }
 
 void moveTiltMotor(String dir)
@@ -200,6 +199,11 @@ void moveTiltMotor(String dir)
       }
       delay(10);
     }
+  }
+  else if (dir == "stop")
+  {
+    tiltMotorCtrl.Stop();
+    tiltMotorCtrl.Disable();
   }
 }
 
