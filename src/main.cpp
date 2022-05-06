@@ -42,7 +42,7 @@ bool tiltDownStop = false;
 
 //############# FUNCTION DEFINITIONS ##############################
 
-void moveMotors(String dir) void panRightInt();
+void moveMotors(String dir);
 void panLeftInt();
 void tiltUpInt();
 void tiltDownInt();
@@ -85,7 +85,7 @@ void loop()
     {
       dir = "up";
       moveMotors(dir);
-      delay(200);
+      delay(500);
       dir = "stop";
       moveMotors(dir);
     }
@@ -93,7 +93,7 @@ void loop()
     {
       dir = "down";
       moveMotors(dir);
-      delay(200);
+      delay(500);
       dir = "stop";
       moveMotors(dir);
     }
@@ -101,7 +101,7 @@ void loop()
     {
       dir = "left";
       moveMotors(dir);
-      delay(200);
+      delay(500);
       dir = "stop";
       moveMotors(dir);
     }
@@ -109,48 +109,12 @@ void loop()
     {
       dir = "right";
       moveMotors(dir);
-      delay(200);
+      delay(500);
       dir = "stop";
       moveMotors(dir);
     }
   }
-  // if (digitalRead(rightBtn) == 0 && dir != "right" && panRightStop == false)
-  // {
-  //   dir = "right";
-  //   moveMotors(dir);
-  // }
-  // else if (digitalRead(leftBtn) == 0 && dir != "left" && panLeftStop == false)
-  // {
-  //   dir = "left";
-  //   moveMotors(dir);
-  // }
-  // else if (digitalRead(upBtn) == 0 && dir != "up" && tiltUpStop == false)
-  // {
-  //   dir = "up";
-  //   moveMotors(dir);
-  // }
-  // else if (digitalRead(downBtn) == 0 && dir != "down" && tiltDownStop == false)
-  // {
-  //   dir = "down";
-  //   moveMotors(dir);
-  // }
-  // else if (dir != "stop" && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
-  //          digitalRead(upBtn) == 1 && digitalRead(downBtn) == 1)
-  // {
-  //   dir = "stop";
-  //   moveMotors(dir);
-  //   delay(100);
-  // }
-  // if (tiltDownStop == true || tiltUpStop == true ||
-  //     panLeftStop == true || panRightStop == true)
-  // {
-  //   if (dir != "stop")
-  //   {
-  //     dir = "stop";
-  //     moveMotors(dir);
-  //   }
-  //   delay(100);
-  // }
+
 } // END MAIN LOOP
 
 void moveMotors(String dir)
@@ -211,11 +175,8 @@ void moveMotors(String dir)
       panMotorCtrl.TurnLeft(speed);
       if (digitalRead(leftBtn) == 1 || panLeftStop == true)
       {
-        panMotorCtrl.Stop();
-        panMotorCtrl.Disable();
-        break;
+        delay(10);
       }
-      delay(10);
     }
   }
   else if (dir == "stop")
