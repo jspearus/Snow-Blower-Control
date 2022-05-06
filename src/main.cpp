@@ -42,9 +42,7 @@ bool tiltDownStop = false;
 
 //############# FUNCTION DEFINITIONS ##############################
 
-void movePanMotor(String dir);
-void moveTiltMotor(String dir);
-void panRightInt();
+void moveMotors(String dir) void panRightInt();
 void panLeftInt();
 void tiltUpInt();
 void tiltDownInt();
@@ -86,125 +84,79 @@ void loop()
     else if (Data_In == "up")
     {
       dir = "up";
-      moveTiltMotor(dir);
+      moveMotors(dir);
       delay(200);
       dir = "stop";
-      movePanMotor(dir);
-      moveTiltMotor(dir);
+      moveMotors(dir);
     }
     else if (Data_In == "down")
     {
       dir = "down";
-      moveTiltMotor(dir);
+      moveMotors(dir);
       delay(200);
       dir = "stop";
-      movePanMotor(dir);
-      moveTiltMotor(dir);
+      moveMotors(dir);
     }
     else if (Data_In == "left")
     {
       dir = "left";
-      movePanMotor(dir);
+      moveMotors(dir);
       delay(200);
       dir = "stop";
-      movePanMotor(dir);
-      moveTiltMotor(dir);
+      moveMotors(dir);
     }
     else if (Data_In == "right")
     {
       dir = "right";
-      movePanMotor(dir);
+      moveMotors(dir);
       delay(200);
       dir = "stop";
-      movePanMotor(dir);
-      moveTiltMotor(dir);
+      moveMotors(dir);
     }
   }
-  if (digitalRead(rightBtn) == 0 && dir != "right" && panRightStop == false)
-  {
-    dir = "right";
-    movePanMotor(dir);
-  }
-  else if (digitalRead(leftBtn) == 0 && dir != "left" && panLeftStop == false)
-  {
-    dir = "left";
-    movePanMotor(dir);
-  }
-  else if (digitalRead(upBtn) == 0 && dir != "up" && tiltUpStop == false)
-  {
-    dir = "up";
-    moveTiltMotor(dir);
-  }
-  else if (digitalRead(downBtn) == 0 && dir != "down" && tiltDownStop == false)
-  {
-    dir = "down";
-    moveTiltMotor(dir);
-  }
-  else if (dir != "stop" && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
-           digitalRead(upBtn) == 1 && digitalRead(downBtn) == 1)
-  {
-    dir = "stop";
-    movePanMotor(dir);
-    moveTiltMotor(dir);
-    delay(100);
-  }
-  if (tiltDownStop == true || tiltUpStop == true ||
-      panLeftStop == true || panRightStop == true)
-  {
-    if (dir != "stop")
-    {
-      dir = "stop";
-      movePanMotor(dir);
-      moveTiltMotor(dir);
-    }
-    delay(100);
-  }
+  // if (digitalRead(rightBtn) == 0 && dir != "right" && panRightStop == false)
+  // {
+  //   dir = "right";
+  //   moveMotors(dir);
+  // }
+  // else if (digitalRead(leftBtn) == 0 && dir != "left" && panLeftStop == false)
+  // {
+  //   dir = "left";
+  //   moveMotors(dir);
+  // }
+  // else if (digitalRead(upBtn) == 0 && dir != "up" && tiltUpStop == false)
+  // {
+  //   dir = "up";
+  //   moveMotors(dir);
+  // }
+  // else if (digitalRead(downBtn) == 0 && dir != "down" && tiltDownStop == false)
+  // {
+  //   dir = "down";
+  //   moveMotors(dir);
+  // }
+  // else if (dir != "stop" && digitalRead(rightBtn) == 1 && digitalRead(leftBtn) == 1 &&
+  //          digitalRead(upBtn) == 1 && digitalRead(downBtn) == 1)
+  // {
+  //   dir = "stop";
+  //   moveMotors(dir);
+  //   delay(100);
+  // }
+  // if (tiltDownStop == true || tiltUpStop == true ||
+  //     panLeftStop == true || panRightStop == true)
+  // {
+  //   if (dir != "stop")
+  //   {
+  //     dir = "stop";
+  //     moveMotors(dir);
+  //   }
+  //   delay(100);
+  // }
 } // END MAIN LOOP
 
-void movePanMotor(String dir)
-{
-  panMotorCtrl.Enable();
-  Serial.println(dir);
-  if (dir == "right")
-  {
-    panLeftStop = false;
-    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
-    {
-      panMotorCtrl.TurnRight(speed);
-      if (digitalRead(rightBtn) == 1 || panRightStop == true)
-      {
-        panMotorCtrl.Stop();
-        panMotorCtrl.Disable();
-        break;
-      }
-      delay(10);
-    }
-  }
-  else if (dir == "left")
-  {
-    panRightStop = false;
-    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
-    {
-      panMotorCtrl.TurnLeft(speed);
-      if (digitalRead(leftBtn) == 1 || panLeftStop == true)
-      {
-        panMotorCtrl.Stop();
-        panMotorCtrl.Disable();
-        break;
-      }
-      delay(10);
-    }
-  }
-  else if (dir == "stop")
-  {
-    panMotorCtrl.Stop();
-    panMotorCtrl.Disable();
-  }
-}
-
-void moveTiltMotor(String dir)
+void moveMotors(String dir)
 {
   tiltMotorCtrl.Enable();
+  panMotorCtrl.Enable();
   Serial.println(dir);
   if (dir == "up")
   {
@@ -236,10 +188,42 @@ void moveTiltMotor(String dir)
       delay(10);
     }
   }
+  else if (dir == "right")
+  {
+    panLeftStop = false;
+    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
+    {
+      panMotorCtrl.TurnRight(speed);
+      if (digitalRead(rightBtn) == 1 || panRightStop == true)
+      {
+        panMotorCtrl.Stop();
+        panMotorCtrl.Disable();
+        break;
+      }
+      delay(10);
+    }
+  }
+  else if (dir == "left")
+  {
+    panRightStop = false;
+    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
+    {
+      panMotorCtrl.TurnLeft(speed);
+      if (digitalRead(leftBtn) == 1 || panLeftStop == true)
+      {
+        panMotorCtrl.Stop();
+        panMotorCtrl.Disable();
+        break;
+      }
+      delay(10);
+    }
+  }
   else if (dir == "stop")
   {
     tiltMotorCtrl.Stop();
     tiltMotorCtrl.Disable();
+    panMotorCtrl.Stop();
+    panMotorCtrl.Disable();
   }
 }
 
