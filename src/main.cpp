@@ -56,14 +56,14 @@ void setup()
   // init interupt pins and atach the Interupt function
 
   // pinMode(intPanRight, INPUT_PULLUP);
-  // attachInterrupt(digitalPinToInterrupt(intPanRight), panRightInt, FALLING);
+  // attachInterrupt(digitalPinToInterrupt(intPanRight), panRightInt, RISING);
   // pinMode(intPanLeft, INPUT_PULLUP);
-  // attachInterrupt(digitalPinToInterrupt(intPanLeft), panLeftInt, FALLING);
+  // attachInterrupt(digitalPinToInterrupt(intPanLeft), panLeftInt, RISING);
 
   pinMode(intTiltUp, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(intTiltUp), tiltUpInt, RISING);
   pinMode(intTiltDown, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, FALLING);
+  attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, RISING);
 
   // set pinmodes for joystick input
   pinMode(rightBtn, INPUT_PULLUP);
