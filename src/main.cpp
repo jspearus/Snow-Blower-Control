@@ -132,7 +132,7 @@ void moveMotors(String dir, int speed)
       panMotorCtrl.TurnRight(speed);
       panRightStop = false;
     }
-    // if (digitalRead(leftBtn) == 1 || panLeftStop == true)
+    // if (panRightStop == true || panLeftStop == true)
     // {
     //   panMotorCtrl.Stop();
     //   panMotorCtrl.Disable();
