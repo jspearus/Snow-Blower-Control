@@ -20,8 +20,8 @@ BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 
 #define intPanRight 1
 #define intPanLeft 0
-#define intTiltUp 3
-#define intTiltDown 2
+#define intTiltUp 2
+#define intTiltDown 3
 
 bool panRightStop = false;
 bool panLeftStop = false;
@@ -29,15 +29,15 @@ bool tiltUpStop = false;
 bool tiltDownStop = false;
 
 // ######## CONFIGURATION ############################
-#define RAMP_UP_SPEED_PAN 10
+#define RAMP_UP_SPEED_PAN 2
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
-#define MAX_SPEED_PAN 255
+#define MAX_SPEED_PAN 100
 
-#define RAMP_UP_SPEED_TILT 10
+#define RAMP_UP_SPEED_TILT 2
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MIN_SPEED_TILT 0
-#define MAX_SPEED_TILT 255
+#define MAX_SPEED_TILT 50
 //####################################################
 
 //############# FUNCTION DEFINITIONS ##############################
@@ -61,7 +61,7 @@ void setup()
   pinMode(intTiltUp, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(intTiltUp), tiltUpInt, RISING);
   pinMode(intTiltDown, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, FALLING);
+  attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, RISING);
 
   // set pinmodes for joystick input
   pinMode(rightBtn, INPUT_PULLUP);
@@ -196,6 +196,7 @@ void tiltUpInt()
   {
     Serial.println("tilt Up Stop");
     tiltUpStop = true;
+    tiltDownStop = false;
     dir = "stop";
   }
 }
@@ -206,6 +207,7 @@ void tiltDownInt()
 
     Serial.println("tilt Down Stop");
     tiltDownStop = true;
+    tiltUpStop = false;
     dir = "stop";
   }
 }
