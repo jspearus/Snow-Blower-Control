@@ -29,6 +29,7 @@ bool tiltUpStop = false;
 bool tiltDownStop = false;
 
 // ######## CONFIGURATION ############################
+#define DEBOUNCE_VAL 300
 #define RAMP_UP_SPEED_PAN 2
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
@@ -174,40 +175,64 @@ void loop()
 
 void panRightInt()
 {
-  if (panRightStop == false && dir == "right")
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
-    Serial.println("pan Right Stop");
-    panRightStop = true;
-    dir = "stop";
+    if (panRightStop == false && dir == "right")
+    {
+      Serial.println("pan Right Stop");
+      panRightStop = true;
+      dir = "stop";
+    }
   }
 }
 void panLeftInt()
 {
-  if (panLeftStop == false && dir == "left")
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
-    Serial.println("pan Left Stop");
-    panLeftStop = true;
-    dir = "stop";
+    if (panLeftStop == false && dir == "left")
+    {
+      Serial.println("pan Left Stop");
+      panLeftStop = true;
+      dir = "stop";
+    }
   }
 }
 void tiltUpInt()
 {
-  if (tiltUpStop == false && dir == "up")
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
-    Serial.println("tilt Up Stop");
-    tiltUpStop = true;
-    tiltDownStop = false;
-    dir = "stop";
+    if (tiltUpStop == false && dir == "up")
+    {
+      Serial.println("tilt Up Stop");
+      tiltUpStop = true;
+      tiltDownStop = false;
+      dir = "stop";
+    }
   }
 }
 void tiltDownInt()
 {
-  if (tiltDownStop == false && dir == "down")
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
+    if (tiltDownStop == false && dir == "down")
+    {
 
-    Serial.println("tilt Down Stop");
-    tiltDownStop = true;
-    tiltUpStop = false;
-    dir = "stop";
+      Serial.println("tilt Down Stop");
+      tiltDownStop = true;
+      tiltUpStop = false;
+      dir = "stop";
+    }
   }
 }
