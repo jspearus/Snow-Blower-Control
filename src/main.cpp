@@ -18,8 +18,8 @@ BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 #define upBtn 14
 #define downBtn 15
 
-#define intPanRight 1
-#define intPanLeft 0
+#define intPanRight 0
+#define intPanLeft 1
 #define intTiltUp 2
 #define intTiltDown 3
 
@@ -30,7 +30,7 @@ bool tiltDownStop = false;
 
 // ######## CONFIGURATION ############################
 #define DEADZONE 0
-#define DEBOUNCE_VAL 300
+#define DEBOUNCE_VAL 7500
 #define RAMP_UP_SPEED_PAN 10
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
@@ -86,7 +86,7 @@ void loop()
     }
     else
     { // PARSE DATA
-      Serial.println(Data_In);
+      // Serial.println(Data_In);//used for debug
       String tempPan = Data_In.substring(0, Data_In.indexOf(","));
       String tempTilt = Data_In.substring(Data_In.indexOf(",") + 1, Data_In.indexOf("#"));
       pan = tempPan.toInt();
@@ -194,6 +194,8 @@ void tiltUpInt()
     if (tiltUpStop == false && tilt > 0)
     {
       Serial.println("tilt Up Stop");
+      Serial.println(interrupt_time);
+      Serial.println(last_interrupt_time);
       tiltUpStop = true;
       tiltDownStop = false;
       moveMotors(0, 0);
