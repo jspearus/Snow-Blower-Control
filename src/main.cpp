@@ -186,6 +186,7 @@ void panRightInt()
       panRightStop = true;
       dir = "stop";
     }
+    last_interrupt_time = interrupt_time;
   }
 }
 void panLeftInt()
@@ -201,6 +202,7 @@ void panLeftInt()
       panLeftStop = true;
       dir = "stop";
     }
+    last_interrupt_time = interrupt_time;
   }
 }
 void tiltUpInt()
@@ -217,6 +219,7 @@ void tiltUpInt()
       tiltDownStop = false;
       dir = "stop";
     }
+    last_interrupt_time = interrupt_time;
   }
 }
 void tiltDownInt()
@@ -234,5 +237,6 @@ void tiltDownInt()
       tiltUpStop = false;
       dir = "stop";
     }
+    last_interrupt_time = interrupt_time;
   }
 }
