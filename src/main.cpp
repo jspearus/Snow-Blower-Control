@@ -42,12 +42,13 @@ bool tiltDownStop = false;
 
 //############# FUNCTION DEFINITIONS ##############################
 
-void moveMotors(String dir);
+void moveMotors(String dir, int speed);
 void panLeftInt();
 void tiltUpInt();
 void tiltDownInt();
 
 String dir = "stop";
+int speed = 0;
 String Data_In = "";
 
 void setup()
@@ -77,14 +78,19 @@ void loop()
   if (Serial.available() > 0)
   {
     Data_In = Serial.readStringUntil('#');
+    // todo setup data Parser
     if (Data_In == "whoRu")
     {
       Serial.println("SnowBlower-#");
     }
-    else if (Data_In == "up")
+    else{
+      dir = "stop"
+      speed = 255
+    }
+    if (Data_In == "up")
     {
       dir = "up";
-      moveMotors(dir);
+      moveMotors(dir, speed);
       delay(500);
       dir = "stop";
       moveMotors(dir);
@@ -117,7 +123,7 @@ void loop()
 
 } // END MAIN LOOP
 
-void moveMotors(String dir)
+void moveMotors(String dir, int speed)
 {
   tiltMotorCtrl.Enable();
   panMotorCtrl.Enable();
