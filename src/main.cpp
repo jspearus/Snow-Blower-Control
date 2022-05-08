@@ -83,41 +83,20 @@ void loop()
     {
       Serial.println("SnowBlower-#");
     }
-    else{
-      dir = "stop"
-      speed = 255
+    else
+    {
+      dir = "stop";
+      speed = 255;
     }
-    if (Data_In == "up")
+    if (Data_In == "pan")
     {
       dir = "up";
       moveMotors(dir, speed);
-      delay(500);
-      dir = "stop";
-      moveMotors(dir);
     }
     else if (Data_In == "down")
     {
       dir = "down";
-      moveMotors(dir);
-      delay(500);
-      dir = "stop";
-      moveMotors(dir);
-    }
-    else if (Data_In == "left")
-    {
-      dir = "left";
-      moveMotors(dir);
-      delay(500);
-      dir = "stop";
-      moveMotors(dir);
-    }
-    else if (Data_In == "right")
-    {
-      dir = "right";
-      moveMotors(dir);
-      delay(500);
-      dir = "stop";
-      moveMotors(dir);
+      moveMotors(dir, speed);
     }
   }
 
@@ -128,61 +107,41 @@ void moveMotors(String dir, int speed)
   tiltMotorCtrl.Enable();
   panMotorCtrl.Enable();
   Serial.println(dir);
-  if (dir == "up")
+  if (dir == "tilt")
   {
-    tiltDownStop = false;
-    for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
+    if (speed > 200)
     {
       tiltMotorCtrl.TurnLeft(speed);
-      if (digitalRead(upBtn) == 1 || tiltUpStop == true)
-      {
-        tiltMotorCtrl.Stop();
-        tiltMotorCtrl.Disable();
-        break;
-      }
-      delay(10);
+      tiltDownStop = false;
     }
-  }
-  else if (dir == "down")
-  {
-    tiltUpStop = false;
-    for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
+    else if (speed < -200)
     {
       tiltMotorCtrl.TurnRight(speed);
-      if (digitalRead(downBtn) == 1 || tiltDownStop == true)
-      {
-        tiltMotorCtrl.Stop();
-        tiltMotorCtrl.Disable();
-        break;
-      }
-      delay(10);
+      tiltUpStop = false;
+    }
+    if (digitalRead(upBtn) == 1 || tiltUpStop == true)
+    {
+      tiltMotorCtrl.Stop();
+      tiltMotorCtrl.Disable();
     }
   }
-  else if (dir == "right")
+
+  else if (dir == "pan")
   {
-    panLeftStop = false;
-    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
+    if (speed > 200)
+    {
+      panLeftStop = false;
+      panMotorCtrl.TurnLeft(speed);
+    }
+    else if (speed < -200)
     {
       panMotorCtrl.TurnRight(speed);
-      if (digitalRead(rightBtn) == 1 || panRightStop == true)
-      {
-        panMotorCtrl.Stop();
-        panMotorCtrl.Disable();
-        break;
-      }
-      delay(10);
+      panRightStop = false;
     }
-  }
-  else if (dir == "left")
-  {
-    panRightStop = false;
-    for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
+    if (digitalRead(leftBtn) == 1 || panLeftStop == true)
     {
-      panMotorCtrl.TurnLeft(speed);
-      if (digitalRead(leftBtn) == 1 || panLeftStop == true)
-      {
-        delay(10);
-      }
+      panMotorCtrl.Stop();
+      panMotorCtrl.Disable();
     }
   }
   else if (dir == "stop")
@@ -200,6 +159,7 @@ void panRightInt()
   {
     Serial.println("pan Right Stop");
     panRightStop = true;
+    panLeftStop = false;
     dir = "stop";
   }
 }
@@ -209,6 +169,7 @@ void panLeftInt()
   {
     Serial.println("pan Left Stop");
     panLeftStop = true;
+    panRightStop = false;
     dir = "stop";
   }
 }
@@ -218,6 +179,7 @@ void tiltUpInt()
   {
     Serial.println("tilt Up Stop");
     tiltUpStop = true;
+    tiltDownStop = false;
     dir = "stop";
   }
 }
@@ -228,6 +190,7 @@ void tiltDownInt()
 
     Serial.println("tilt Down Stop");
     tiltDownStop = true;
+    tiltUpStop = false;
     dir = "stop";
   }
 }
