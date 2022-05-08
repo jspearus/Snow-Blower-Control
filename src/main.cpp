@@ -29,7 +29,7 @@ bool tiltUpStop = false;
 bool tiltDownStop = false;
 
 // ######## CONFIGURATION ############################
-#define DEBOUNCE_VAL 300
+#define DEBOUNCE_VAL 500
 #define RAMP_UP_SPEED_PAN 2
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
@@ -38,7 +38,7 @@ bool tiltDownStop = false;
 #define RAMP_UP_SPEED_TILT 2
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MIN_SPEED_TILT 0
-#define MAX_SPEED_TILT 50
+#define MAX_SPEED_TILT 100
 //####################################################
 
 //############# FUNCTION DEFINITIONS ##############################
@@ -171,8 +171,9 @@ void loop()
     tiltMotorCtrl.Disable();
     delay(100);
   }
-}
+} // END MAIN LOOP
 
+// INTERUPT FUNCTIONS
 void panRightInt()
 {
   static unsigned long last_interrupt_time = 0;
@@ -207,8 +208,8 @@ void panLeftInt()
 }
 void tiltUpInt()
 {
-  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
+  static unsigned long last_interrupt_time = interrupt_time;
   // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
   if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
@@ -224,8 +225,8 @@ void tiltUpInt()
 }
 void tiltDownInt()
 {
-  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
+  static unsigned long last_interrupt_time = interrupt_time;
   // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
   if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
