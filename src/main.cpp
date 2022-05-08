@@ -29,7 +29,8 @@ bool tiltUpStop = false;
 bool tiltDownStop = false;
 
 // ######## CONFIGURATION ############################
-#define DEADZONE 2
+#define DEADZONE 0
+#define DEBOUNCE_VAL 300
 #define RAMP_UP_SPEED_PAN 10
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
@@ -43,13 +44,13 @@ bool tiltDownStop = false;
 
 //############# FUNCTION DEFINITIONS ##############################
 
-void moveMotors(String dir, int speed);
+void moveMotors(int pan, int tilt);
 void panLeftInt();
 void tiltUpInt();
 void tiltDownInt();
 
-String dir = "stop";
-int speed = 0;
+int pan = 0;
+int tilt = 0;
 String Data_In = "";
 
 void setup()
@@ -86,57 +87,53 @@ void loop()
     else
     { // PARSE DATA
       Serial.println(Data_In);
-      dir = Data_In.substring(0, Data_In.indexOf(","));
-      String tempData = Data_In.substring(Data_In.indexOf(",") + 1, Data_In.indexOf("#"));
-      speed = tempData.toInt();
-      Serial.println(dir);
-      Serial.println(speed);
-      moveMotors(dir, speed);
+      String tempPan = Data_In.substring(0, Data_In.indexOf(","));
+      String tempTilt = Data_In.substring(Data_In.indexOf(",") + 1, Data_In.indexOf("#"));
+      pan = tempPan.toInt();
+      tilt = tempTilt.toInt();
+      moveMotors(pan, tilt);
     }
   }
 } // END MAIN LOOP
 
-void moveMotors(String dir, int speed)
+void moveMotors(int pan, int tilt)
 {
   tiltMotorCtrl.Enable();
   panMotorCtrl.Enable();
-  if (dir == "up")
+  if (tilt > 0)
   {
-    if (speed > DEADZONE)
-    {
-      tiltMotorCtrl.TurnLeft(speed);
-      tiltDownStop = false;
-    }
+    tilt = map(tilt, 0, 1023, 0, 254),
+    tiltMotorCtrl.TurnLeft(tilt);
+    tiltDownStop = false;
   }
-  else if (dir == "down")
+  else if (tilt < 0)
   {
-    if (speed > DEADZONE)
-    {
-      tiltMotorCtrl.TurnRight(speed);
-      tiltUpStop = false;
-    }
+    tilt = (tilt * -1);
+    tilt = map(tilt, 0, 1023, 0, 254),
+    tiltMotorCtrl.TurnRight(tilt);
+    tiltUpStop = false;
   }
-
-  else if (dir == "left")
-  {
-    if (speed > DEADZONE)
-    {
-      panRightStop = false;
-      panMotorCtrl.TurnLeft(speed);
-    }
-  }
-  else if (dir == "right")
-  {
-    if (speed > DEADZONE)
-    {
-      panLeftStop = false;
-      panMotorCtrl.TurnRight(speed);
-    }
-  }
-  else if (dir == "stop")
+  else if (tilt == 0)
   {
     tiltMotorCtrl.Stop();
     tiltMotorCtrl.Disable();
+  }
+
+  if (pan < 0)
+  {
+    pan = (pan * -1);
+    pan = map(pan, 0, 1023, 0, 254);
+    panMotorCtrl.TurnLeft(pan);
+    panRightStop = false;
+  }
+  else if (pan > 0)
+  {
+    pan = map(pan, 0, 1023, 0, 254);
+    panMotorCtrl.TurnRight(pan);
+    panLeftStop = false;
+  }
+  else if (pan == 0)
+  {
     panMotorCtrl.Stop();
     panMotorCtrl.Disable();
   }
@@ -155,42 +152,53 @@ void moveMotors(String dir, int speed)
 // INTERUPT FUNCTIONS
 void panRightInt()
 {
-  if (panRightStop == false && dir == "right")
+  if (panRightStop == false && pan > 0)
   {
     Serial.println("pan Right Stop");
     panRightStop = true;
     panLeftStop = false;
-    moveMotors("stop", 0);
+    moveMotors(0, 0);
   }
 }
 void panLeftInt()
 {
-  if (panLeftStop == false && dir == "left")
+  if (panLeftStop == false && pan < 0)
   {
     Serial.println("pan Left Stop");
     panLeftStop = true;
     panRightStop = false;
-    moveMotors("stop", 0);
+    moveMotors(0, 0);
   }
 }
 void tiltUpInt()
 {
-  if (tiltUpStop == false && dir == "up")
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than 200ms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
-    Serial.println("tilt Up Stop");
-    tiltUpStop = true;
-    tiltDownStop = false;
-    moveMotors("stop", 0);
+    if (tiltUpStop == false && tilt > 0)
+    {
+      Serial.println("tilt Up Stop");
+      tiltUpStop = true;
+      tiltDownStop = false;
+      moveMotors(0, 0);
+    }
   }
 }
 void tiltDownInt()
 {
-  if (tiltDownStop == false && dir == "down")
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than 200ms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
-
-    Serial.println("tilt Down Stop");
-    tiltDownStop = true;
-    tiltUpStop = false;
-    moveMotors("stop", 0);
+    if (tiltDownStop == false && tilt < 0)
+    {
+      Serial.println("tilt Down Stop");
+      tiltDownStop = true;
+      tiltUpStop = false;
+      moveMotors(0, 0);
+    }
   }
 }
