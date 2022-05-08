@@ -152,22 +152,34 @@ void moveMotors(int pan, int tilt)
 // INTERUPT FUNCTIONS
 void panRightInt()
 {
-  if (panRightStop == false && pan > 0)
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than 200ms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
-    Serial.println("pan Right Stop");
-    panRightStop = true;
-    panLeftStop = false;
-    moveMotors(0, 0);
+    if (panRightStop == false && pan > 0)
+    {
+      Serial.println("pan Right Stop");
+      panRightStop = true;
+      panLeftStop = false;
+      moveMotors(0, 0);
+    }
   }
 }
 void panLeftInt()
 {
-  if (panLeftStop == false && pan < 0)
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  // If interrupts come faster than 200ms, assume it's a bounce and ignore
+  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
   {
-    Serial.println("pan Left Stop");
-    panLeftStop = true;
-    panRightStop = false;
-    moveMotors(0, 0);
+    if (panLeftStop == false && pan < 0)
+    {
+      Serial.println("pan Left Stop");
+      panLeftStop = true;
+      panRightStop = false;
+      moveMotors(0, 0);
+    }
   }
 }
 void tiltUpInt()
