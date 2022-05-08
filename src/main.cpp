@@ -38,7 +38,7 @@ bool tiltDownStop = false;
 #define RAMP_UP_SPEED_TILT 2
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MIN_SPEED_TILT 0
-#define MAX_SPEED_TILT 100
+#define MAX_SPEED_TILT 150
 //####################################################
 
 //############# FUNCTION DEFINITIONS ##############################
