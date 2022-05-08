@@ -29,6 +29,7 @@ bool tiltUpStop = false;
 bool tiltDownStop = false;
 
 // ######## CONFIGURATION ############################
+#define DEADZONE 2
 #define RAMP_UP_SPEED_PAN 10
 // #define RAMP_DOWN_SPEED_PAN 30
 #define MIN_SPEED_PAN 0
@@ -85,41 +86,34 @@ void loop()
     }
     else
     {
-      dir = "stop";
-      speed = 255;
-    }
-    if (Data_In == "pan")
-    {
-      dir = "up";
-      moveMotors(dir, speed);
-    }
-    else if (Data_In == "down")
-    {
-      dir = "down";
+      Serial.println(Data_In);
+      dir = Data_In.substring(0, Data_In.indexOf(","));
+      String tempData = Data_In.substring(Data_In.indexOf(",") + 1, Data_In.indexOf("#"));
+      speed = tempData.toInt();
+      Serial.println(dir);
+      Serial.println(speed);
       moveMotors(dir, speed);
     }
   }
-
 } // END MAIN LOOP
 
 void moveMotors(String dir, int speed)
 {
   tiltMotorCtrl.Enable();
   panMotorCtrl.Enable();
-  Serial.println(dir);
   if (dir == "tilt")
   {
-    if (speed > 200)
+    if (speed > DEADZONE)
     {
       tiltMotorCtrl.TurnLeft(speed);
       tiltDownStop = false;
     }
-    else if (speed < -200)
+    else if (speed < -DEADZONE)
     {
       tiltMotorCtrl.TurnRight(speed);
       tiltUpStop = false;
     }
-    if (digitalRead(upBtn) == 1 || tiltUpStop == true)
+    if (tiltDownStop == true || tiltUpStop == true)
     {
       tiltMotorCtrl.Stop();
       tiltMotorCtrl.Disable();
@@ -128,21 +122,21 @@ void moveMotors(String dir, int speed)
 
   else if (dir == "pan")
   {
-    if (speed > 200)
+    if (speed > DEADZONE)
     {
       panLeftStop = false;
       panMotorCtrl.TurnLeft(speed);
     }
-    else if (speed < -200)
+    else if (speed < -DEADZONE)
     {
       panMotorCtrl.TurnRight(speed);
       panRightStop = false;
     }
-    if (digitalRead(leftBtn) == 1 || panLeftStop == true)
-    {
-      panMotorCtrl.Stop();
-      panMotorCtrl.Disable();
-    }
+    // if (digitalRead(leftBtn) == 1 || panLeftStop == true)
+    // {
+    //   panMotorCtrl.Stop();
+    //   panMotorCtrl.Disable();
+    // }
   }
   else if (dir == "stop")
   {
