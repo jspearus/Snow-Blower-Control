@@ -20,8 +20,8 @@ BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 
 #define intPanRight 1
 #define intPanLeft 0
-#define intTiltUp 3
-#define intTiltDown 2
+#define intTiltUp 2
+#define intTiltDown 3
 
 bool panRightStop = false;
 bool panLeftStop = false;
@@ -79,13 +79,12 @@ void loop()
   if (Serial.available() > 0)
   {
     Data_In = Serial.readStringUntil('#');
-    // todo setup data Parser
     if (Data_In == "whoRu")
     {
-      Serial.println("SnowBlower-#");
+      Serial.println("SnowBlower_#");
     }
     else
-    {
+    { // PARSE DATA
       Serial.println(Data_In);
       dir = Data_In.substring(0, Data_In.indexOf(","));
       String tempData = Data_In.substring(Data_In.indexOf(",") + 1, Data_In.indexOf("#"));
@@ -101,42 +100,38 @@ void moveMotors(String dir, int speed)
 {
   tiltMotorCtrl.Enable();
   panMotorCtrl.Enable();
-  if (dir == "tilt")
+  if (dir == "up")
   {
     if (speed > DEADZONE)
     {
       tiltMotorCtrl.TurnLeft(speed);
       tiltDownStop = false;
     }
-    else if (speed < -DEADZONE)
+  }
+  else if (dir == "down")
+  {
+    if (speed > DEADZONE)
     {
       tiltMotorCtrl.TurnRight(speed);
       tiltUpStop = false;
     }
-    if (tiltDownStop == true || tiltUpStop == true)
-    {
-      tiltMotorCtrl.Stop();
-      tiltMotorCtrl.Disable();
-    }
   }
 
-  else if (dir == "pan")
+  else if (dir == "left")
+  {
+    if (speed > DEADZONE)
+    {
+      panRightStop = false;
+      panMotorCtrl.TurnLeft(speed);
+    }
+  }
+  else if (dir == "right")
   {
     if (speed > DEADZONE)
     {
       panLeftStop = false;
-      panMotorCtrl.TurnLeft(speed);
-    }
-    else if (speed < -DEADZONE)
-    {
       panMotorCtrl.TurnRight(speed);
-      panRightStop = false;
     }
-    // if (panRightStop == true || panLeftStop == true)
-    // {
-    //   panMotorCtrl.Stop();
-    //   panMotorCtrl.Disable();
-    // }
   }
   else if (dir == "stop")
   {
@@ -145,8 +140,19 @@ void moveMotors(String dir, int speed)
     panMotorCtrl.Stop();
     panMotorCtrl.Disable();
   }
+  if (tiltDownStop == true || tiltUpStop == true)
+  {
+    tiltMotorCtrl.Stop();
+    tiltMotorCtrl.Disable();
+  }
+  // if (panRightStop == true || panLeftStop == true)
+  // {
+  //   panMotorCtrl.Stop();
+  //   panMotorCtrl.Disable();
+  // }
 }
 
+// INTERUPT FUNCTIONS
 void panRightInt()
 {
   if (panRightStop == false && dir == "right")
@@ -154,7 +160,7 @@ void panRightInt()
     Serial.println("pan Right Stop");
     panRightStop = true;
     panLeftStop = false;
-    dir = "stop";
+    moveMotors("stop", 0);
   }
 }
 void panLeftInt()
@@ -164,7 +170,7 @@ void panLeftInt()
     Serial.println("pan Left Stop");
     panLeftStop = true;
     panRightStop = false;
-    dir = "stop";
+    moveMotors("stop", 0);
   }
 }
 void tiltUpInt()
@@ -174,7 +180,7 @@ void tiltUpInt()
     Serial.println("tilt Up Stop");
     tiltUpStop = true;
     tiltDownStop = false;
-    dir = "stop";
+    moveMotors("stop", 0);
   }
 }
 void tiltDownInt()
@@ -185,6 +191,6 @@ void tiltDownInt()
     Serial.println("tilt Down Stop");
     tiltDownStop = true;
     tiltUpStop = false;
-    dir = "stop";
+    moveMotors("stop", 0);
   }
 }
