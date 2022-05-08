@@ -164,6 +164,7 @@ void panRightInt()
       panLeftStop = false;
       moveMotors(0, 0);
     }
+    last_interrupt_time = interrupt_time;
   }
 }
 void panLeftInt()
@@ -180,6 +181,7 @@ void panLeftInt()
       panRightStop = false;
       moveMotors(0, 0);
     }
+    last_interrupt_time = interrupt_time;
   }
 }
 void tiltUpInt()
@@ -196,6 +198,7 @@ void tiltUpInt()
       tiltDownStop = false;
       moveMotors(0, 0);
     }
+    last_interrupt_time = interrupt_time;
   }
 }
 void tiltDownInt()
@@ -212,5 +215,6 @@ void tiltDownInt()
       tiltUpStop = false;
       moveMotors(0, 0);
     }
+    last_interrupt_time = interrupt_time;
   }
 }
