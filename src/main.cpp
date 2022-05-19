@@ -60,9 +60,9 @@ void setup()
   // attachInterrupt(digitalPinToInterrupt(intPanLeft), panLeftInt, FALLING);
 
   pinMode(intTiltUp, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(intTiltUp), tiltUpInt, RISING);
+  attachInterrupt(digitalPinToInterrupt(intTiltUp), tiltUpInt, HIGH);
   pinMode(intTiltDown, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, RISING);
+  attachInterrupt(digitalPinToInterrupt(intTiltDown), tiltDownInt, HIGH);
 
   // set pinmodes for joystick input
   pinMode(rightBtn, INPUT_PULLUP);
