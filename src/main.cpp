@@ -176,10 +176,10 @@ void loop()
 // INTERUPT FUNCTIONS
 void panRightInt()
 {
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  static unsigned long last_interrupt_time_R = 0;
+  unsigned long interrupt_time_R = millis();
   // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
-  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
+  if (interrupt_time_R - last_interrupt_time_R > DEBOUNCE_VAL)
   {
     if (panRightStop == false && dir == "right")
     {
@@ -187,15 +187,15 @@ void panRightInt()
       panRightStop = true;
       dir = "stop";
     }
-    last_interrupt_time = interrupt_time;
+    last_interrupt_time_R = interrupt_time_R;
   }
 }
 void panLeftInt()
 {
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  static unsigned long last_interrupt_time_L = 0;
+  unsigned long interrupt_time_L = millis();
   // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
-  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
+  if (interrupt_time_L - last_interrupt_time_L > DEBOUNCE_VAL)
   {
     if (panLeftStop == false && dir == "left")
     {
@@ -203,7 +203,7 @@ void panLeftInt()
       panLeftStop = true;
       dir = "stop";
     }
-    last_interrupt_time = interrupt_time;
+    last_interrupt_time_L = interrupt_time_L;
   }
 }
 void tiltUpInt()
