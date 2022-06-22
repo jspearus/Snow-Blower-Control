@@ -36,9 +36,10 @@ bool tiltDownStop = false;
 #define MAX_SPEED_PAN 254
 
 #define RAMP_UP_SPEED_TILT 1
-#define MIN_SPEED_TILT 10
-#define MAX_SPEED_TILT 60
-#define DOWN_OFFSET 4
+#define MIN_SPEED_TILT_UP 10
+#define MAX_SPEED_TILT_UP 60
+#define MIN_SPEED_TILT_DOWN 0
+#define MAX_SPEED_TILT_DOWN 30
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MAX_SPEED_TILT 50
 
@@ -113,7 +114,7 @@ void loop()
     tiltMotorCtrl.Enable();
     dir = "up";
     Serial.println(dir);
-    for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
+    for (int speed = MIN_SPEED_TILT_UP; speed < MAX_SPEED_TILT_UP; speed += RAMP_UP_SPEED_TILT)
     {
       tiltMotorCtrl.TurnRight(speed);
       if (digitalRead(upBtn) == 1 || digitalRead(intTiltUp) == 1)
@@ -131,8 +132,7 @@ void loop()
     tiltMotorCtrl.Enable();
     dir = "down";
     Serial.println(dir);
-    int NEW_MAX_SPEED_TILT = MAX_SPEED_TILT / DOWN_OFFSET;
-    for (int speed = MIN_SPEED_TILT; speed < NEW_MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
+    for (int speed = MIN_SPEED_TILT_DOWN; speed < MAX_SPEED_TILT_DOWN; speed += RAMP_UP_SPEED_TILT)
     {
       tiltMotorCtrl.TurnLeft(speed);
       if (digitalRead(downBtn) == 1 || digitalRead(intTiltDown) == 1)
@@ -170,72 +170,3 @@ void loop()
     delay(100);
   }
 } // END MAIN LOOP
-
-// INTERUPT FUNCTIONS
-void panRightInt()
-{
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
-  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
-  {
-    if (panRightStop == false && dir == "right")
-    {
-      Serial.println("pan Right Stop");
-      panRightStop = true;
-      dir = "stop";
-    }
-    last_interrupt_time = interrupt_time;
-  }
-}
-void panLeftInt()
-{
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
-  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
-  {
-    if (panLeftStop == false && dir == "left")
-    {
-      Serial.println("pan Left Stop");
-      panLeftStop = true;
-      dir = "stop";
-    }
-    last_interrupt_time = interrupt_time;
-  }
-}
-void tiltUpInt()
-{
-  unsigned long interrupt_time = millis();
-  static unsigned long last_interrupt_time = interrupt_time;
-  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
-  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
-  {
-    if (tiltUpStop == false && dir == "up")
-    {
-      Serial.println("tilt Up Stop");
-      tiltUpStop = true;
-      tiltDownStop = false;
-      dir = "stop";
-    }
-    last_interrupt_time = interrupt_time;
-  }
-}
-void tiltDownInt()
-{
-  unsigned long interrupt_time = millis();
-  static unsigned long last_interrupt_time = interrupt_time;
-  // If interrupts come faster than DEBOUNCE_VALms, assume it's a bounce and ignore
-  if (interrupt_time - last_interrupt_time > DEBOUNCE_VAL)
-  {
-    if (tiltDownStop == false && dir == "down")
-    {
-
-      Serial.println("tilt Down Stop");
-      tiltDownStop = true;
-      tiltUpStop = false;
-      dir = "stop";
-    }
-    last_interrupt_time = interrupt_time;
-  }
-}
