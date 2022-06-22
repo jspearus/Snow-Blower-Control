@@ -32,13 +32,13 @@ bool tiltDownStop = false;
 #define DEBOUNCE_VAL 500
 #define RAMP_UP_SPEED_PAN 2
 // #define RAMP_DOWN_SPEED_PAN 30
-#define MIN_SPEED_PAN 0
-#define MAX_SPEED_PAN 100
+#define MIN_SPEED_PAN 100
+#define MAX_SPEED_PAN 254
 
 #define RAMP_UP_SPEED_TILT 2
 // #define RAMP_DOWN_SPEED_TILT 2
-#define MIN_SPEED_TILT 0
-#define MAX_SPEED_TILT 150
+#define MIN_SPEED_TILT 10
+#define MAX_SPEED_TILT 50
 //####################################################
 
 //############# FUNCTION DEFINITIONS ##############################
@@ -80,7 +80,7 @@ void loop()
     Serial.println(dir);
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
     {
-      panMotorCtrl.TurnRight(speed);
+      panMotorCtrl.TurnLeft(speed);
       if (digitalRead(rightBtn) == 1 || panRightStop == true)
       {
         panMotorCtrl.Stop();
@@ -98,7 +98,7 @@ void loop()
     Serial.println(dir);
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
     {
-      panMotorCtrl.TurnLeft(speed);
+      panMotorCtrl.TurnRight(speed);
       if (digitalRead(leftBtn) == 1 || panLeftStop == true)
       {
         panMotorCtrl.Stop();
@@ -116,7 +116,7 @@ void loop()
     Serial.println(dir);
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
-      tiltMotorCtrl.TurnLeft(speed);
+      tiltMotorCtrl.TurnRight(speed);
       if (digitalRead(upBtn) == 1 || tiltUpStop == true)
       {
         tiltMotorCtrl.Stop();
@@ -134,7 +134,7 @@ void loop()
     Serial.println(dir);
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
-      tiltMotorCtrl.TurnRight(speed);
+      tiltMotorCtrl.TurnLeft(speed);
       if (digitalRead(downBtn) == 1 || tiltDownStop == true)
       {
         tiltMotorCtrl.Stop();
