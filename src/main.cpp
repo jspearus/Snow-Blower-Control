@@ -38,6 +38,7 @@ bool tiltDownStop = false;
 #define RAMP_UP_SPEED_TILT 1
 #define MIN_SPEED_TILT 10
 #define MAX_SPEED_TILT 60
+#define DOWN_OFFSET 4
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MAX_SPEED_TILT 50
 
@@ -130,9 +131,10 @@ void loop()
     tiltMotorCtrl.Enable();
     dir = "down";
     Serial.println(dir);
-    for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
+    int NEW_MAX_SPEED_TILT = MAX_SPEED_TILT / DOWN_OFFSET;
+    for (int speed = MIN_SPEED_TILT; speed < NEW_MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
-      tiltMotorCtrl.TurnLeft(speed / 4);
+      tiltMotorCtrl.TurnLeft(speed);
       if (digitalRead(downBtn) == 1 || digitalRead(intTiltDown) == 1)
       {
         tiltMotorCtrl.Stop();
