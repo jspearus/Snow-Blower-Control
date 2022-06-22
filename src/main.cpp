@@ -13,10 +13,10 @@ const uint8_t tR_PWM = 10;
 
 BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 
-#define rightBtn 7
-#define leftBtn 8
-#define upBtn 15
-#define downBtn 14
+#define rightBtn 8
+#define leftBtn 7
+#define upBtn 14
+#define downBtn 15
 
 #define intPanRight 1
 #define intPanLeft 0
