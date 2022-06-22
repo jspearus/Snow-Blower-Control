@@ -13,10 +13,10 @@ const uint8_t tR_PWM = 10;
 
 BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 
-#define rightBtn 8
-#define leftBtn 7
-#define upBtn 14
-#define downBtn 15
+#define rightBtn 7
+#define leftBtn 8
+#define upBtn 15
+#define downBtn 14
 
 #define intPanRight 1
 #define intPanLeft 0
@@ -32,13 +32,13 @@ bool tiltDownStop = false;
 #define DEBOUNCE_VAL 500
 #define RAMP_UP_SPEED_PAN 2
 // #define RAMP_DOWN_SPEED_PAN 30
-#define MIN_SPEED_PAN 0
-#define MAX_SPEED_PAN 100
+#define MIN_SPEED_PAN 100
+#define MAX_SPEED_PAN 254
 
-#define RAMP_UP_SPEED_TILT 2
+#define RAMP_UP_SPEED_TILT 1
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MIN_SPEED_TILT 0
-#define MAX_SPEED_TILT 150
+#define MAX_SPEED_TILT 50
 //####################################################
 
 //############# FUNCTION DEFINITIONS ##############################
