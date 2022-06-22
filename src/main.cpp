@@ -156,8 +156,8 @@ void loop()
     delay(100);
   }
 
-    // todo if statment runs each cicle causing a studder in movement
-  if (digitalRead(intTiltDown) == 1 || digitalRead(intTiltUp) == 1 ||
+  // todo if statment runs each cicle causing a studder in movement
+  if ((digitalRead(intTiltDown) == 1 && dir == "down") || (digitalRead(intTiltUp) == 1 && dir == "up") ||
       panLeftStop == true || panRightStop == true)
   {
     if (dir != "stop")
