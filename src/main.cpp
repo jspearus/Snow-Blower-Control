@@ -74,11 +74,11 @@ void setup()
 
 void loop()
 {
-  if (digitalRead(rightBtn) == 0 && dir != "right" && panRightStop == false)
+  if (digitalRead(rightBtn) == 0 && dir != "left" && panRightStop == false)
   {
     panLeftStop = false;
     panMotorCtrl.Enable();
-    dir = "right";
+    dir = "left";
     Serial.println(dir);
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
     {
@@ -92,11 +92,11 @@ void loop()
       delay(10);
     }
   }
-  else if (digitalRead(leftBtn) == 0 && dir != "left" && panLeftStop == false)
+  else if (digitalRead(leftBtn) == 0 && dir != "right" && panLeftStop == false)
   {
     panRightStop = false;
     panMotorCtrl.Enable();
-    dir = "left";
+    dir = "right";
     Serial.println(dir);
     for (int speed = MIN_SPEED_PAN; speed < MAX_SPEED_PAN; speed += RAMP_UP_SPEED_PAN)
     {
@@ -110,11 +110,11 @@ void loop()
       delay(10);
     }
   }
-  else if (digitalRead(upBtn) == 0 && dir != "up" && tiltUpStop == false)
+  else if (digitalRead(upBtn) == 0 && dir != "down" && tiltUpStop == false)
   {
     tiltDownStop = false;
     tiltMotorCtrl.Enable();
-    dir = "up";
+    dir = "down";
     Serial.println(dir);
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
@@ -128,11 +128,11 @@ void loop()
       delay(10);
     }
   }
-  else if (digitalRead(downBtn) == 0 && dir != "down" && tiltDownStop == false)
+  else if (digitalRead(downBtn) == 0 && dir != "up" && tiltDownStop == false)
   {
     tiltUpStop = false;
     tiltMotorCtrl.Enable();
-    dir = "down";
+    dir = "up";
     Serial.println(dir);
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
