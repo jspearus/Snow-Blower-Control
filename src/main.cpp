@@ -13,10 +13,10 @@ const uint8_t tR_PWM = 10;
 
 BTS7960 tiltMotorCtrl(tEN, tL_PWM, tR_PWM);
 
-#define rightBtn 8
-#define leftBtn 7
-#define upBtn 14
-#define downBtn 15
+#define rightBtn 7
+#define leftBtn 8
+#define upBtn 15
+#define downBtn 14
 
 #define intPanRight 1
 #define intPanLeft 0
@@ -35,13 +35,11 @@ bool tiltDownStop = false;
 #define MIN_SPEED_PAN 100
 #define MAX_SPEED_PAN 254
 
-#define RAMP_UP_SPEED_TILT 2
-// #define RAMP_DOWN_SPEED_TILT 2
+#define RAMP_UP_SPEED_TILT 1
 #define MIN_SPEED_TILT 10
+#define MAX_SPEED_TILT 60
+// #define RAMP_DOWN_SPEED_TILT 2
 #define MAX_SPEED_TILT 50
-//####################################################
-
-//############# FUNCTION DEFINITIONS ##############################
 
 void panRightInt();
 void panLeftInt();
@@ -108,7 +106,7 @@ void loop()
       delay(10);
     }
   }
-  else if (digitalRead(upBtn) == 0 && dir != "up" && tiltUpStop == false)
+  else if (digitalRead(upBtn) == 0 && dir != "up" && digitalRead(intTiltUp) == false)
   {
     tiltDownStop = false;
     tiltMotorCtrl.Enable();
@@ -117,7 +115,7 @@ void loop()
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
       tiltMotorCtrl.TurnRight(speed);
-      if (digitalRead(upBtn) == 1 || tiltUpStop == true)
+      if (digitalRead(upBtn) == 1 || digitalRead(intTiltUp) == true)
       {
         tiltMotorCtrl.Stop();
         tiltMotorCtrl.Disable();
@@ -126,7 +124,7 @@ void loop()
       delay(10);
     }
   }
-  else if (digitalRead(downBtn) == 0 && dir != "down" && tiltDownStop == false)
+  else if (digitalRead(downBtn) == 0 && dir != "down" && digitalRead(intTiltDown) == false)
   {
     tiltUpStop = false;
     tiltMotorCtrl.Enable();
@@ -134,8 +132,8 @@ void loop()
     Serial.println(dir);
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
-      tiltMotorCtrl.TurnLeft(speed);
-      if (digitalRead(downBtn) == 1 || tiltDownStop == true)
+      tiltMotorCtrl.TurnLeft(speed / 4);
+      if (digitalRead(downBtn) == 1 || digitalRead(intTiltDown) == true)
       {
         tiltMotorCtrl.Stop();
         tiltMotorCtrl.Disable();
