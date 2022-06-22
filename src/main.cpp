@@ -106,7 +106,7 @@ void loop()
       delay(10);
     }
   }
-  else if (digitalRead(upBtn) == 0 && dir != "up" && digitalRead(intTiltUp) == false)
+  else if (digitalRead(upBtn) == 0 && dir != "up" && digitalRead(intTiltUp) == 0)
   {
     tiltDownStop = false;
     tiltMotorCtrl.Enable();
@@ -115,7 +115,7 @@ void loop()
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
       tiltMotorCtrl.TurnRight(speed);
-      if (digitalRead(upBtn) == 1 || digitalRead(intTiltUp) == true)
+      if (digitalRead(upBtn) == 1 || digitalRead(intTiltUp) == 1)
       {
         tiltMotorCtrl.Stop();
         tiltMotorCtrl.Disable();
@@ -124,7 +124,7 @@ void loop()
       delay(10);
     }
   }
-  else if (digitalRead(downBtn) == 0 && dir != "down" && digitalRead(intTiltDown) == false)
+  else if (digitalRead(downBtn) == 0 && dir != "down" && digitalRead(intTiltDown) == 0)
   {
     tiltUpStop = false;
     tiltMotorCtrl.Enable();
@@ -133,7 +133,7 @@ void loop()
     for (int speed = MIN_SPEED_TILT; speed < MAX_SPEED_TILT; speed += RAMP_UP_SPEED_TILT)
     {
       tiltMotorCtrl.TurnLeft(speed / 4);
-      if (digitalRead(downBtn) == 1 || digitalRead(intTiltDown) == true)
+      if (digitalRead(downBtn) == 1 || digitalRead(intTiltDown) == 1)
       {
         tiltMotorCtrl.Stop();
         tiltMotorCtrl.Disable();
@@ -153,7 +153,7 @@ void loop()
     tiltMotorCtrl.Disable();
     delay(100);
   }
-  if (tiltDownStop == true || tiltUpStop == true ||
+  if (digitalRead(intTiltDown) == 1 || digitalRead(intTiltUp) == 1 ||
       panLeftStop == true || panRightStop == true)
   {
     if (dir != "stop")
