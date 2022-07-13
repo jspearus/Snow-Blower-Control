@@ -36,10 +36,10 @@ bool tiltDownStop = false;
 #define MAX_SPEED_PAN 254
 
 #define RAMP_UP_SPEED_TILT 1
-#define MIN_SPEED_TILT_UP 10
-#define MAX_SPEED_TILT_UP 60
+#define MIN_SPEED_TILT_UP 50
+#define MAX_SPEED_TILT_UP 150
 #define MIN_SPEED_TILT_DOWN 0
-#define MAX_SPEED_TILT_DOWN 30
+#define MAX_SPEED_TILT_DOWN 20
 // #define RAMP_DOWN_SPEED_TILT 2
 #define MAX_SPEED_TILT 50
 
